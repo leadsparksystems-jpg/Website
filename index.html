@@ -36,6 +36,7 @@
       --grid-gap: 8px;
       --h-para-gap: 16px;
       --text-wrap-padding: 8px;
+      --text-wrap-gap: 16px;
       --paragraph-top-margin: 16px;
       --button-holder-margin: 48px;
       --divider-height: 100px;
@@ -83,6 +84,9 @@
         --button-holder-margin: 32px;
         --grid-columns: 6;
         --logo-side-padding: 4px;
+        --text-wrap-padding: 4px;
+        --text-wrap-gap: 8px;
+        --paragraph-top-margin: 8px;
       }
     }
 
@@ -268,16 +272,17 @@
     .stretch-block {
       display: flex;
       flex-direction: column;
-      gap: var(--h-para-gap);
     }
 
     .text-wrap {
       display: flex;
       flex-direction: column;
       padding: var(--text-wrap-padding);
+      gap: var(--text-wrap-gap);
     }
 
-    .text_margin-wrap { margin-top: var(--paragraph-top-margin); }
+    .paragraph { margin-top: var(--paragraph-top-margin); }
+    .text-wrap > .paragraph:first-child { margin-top: 0; }
 
     .small-bento-wrap {
       padding: var(--small-bento-padding);
@@ -475,7 +480,10 @@
       justify-content: center;
       width: 100%;
       height: 100%;
-      padding: var(--large-bento-padding) var(--logo-side-padding);
+      padding-top: calc(var(--large-bento-padding) + var(--text-wrap-padding));
+      padding-bottom: var(--logo-side-padding);
+      padding-left: var(--logo-side-padding);
+      padding-right: var(--logo-side-padding);
       overflow: hidden;
     }
 
@@ -545,7 +553,7 @@
     }
 
     .svg-container svg,
-    .svg-container img { max-width: 100%; max-height: 100%; }
+    .svg-container img { max-width: 70%; max-height: 70%; }
 
     /* ========== CARD GRID (sub-grid for service cards) ========== */
     .card-grid {
@@ -691,8 +699,6 @@
             <div class="stretch-block">
               <div class="text-wrap">
                 <h2 class="hero-heading"><span class="ember">END</span> THE FEAST OR FAMINE CYCLE</h2>
-              </div>
-              <div class="text-wrap text_margin-wrap">
                 <h1 class="sub-heading">Websites For Irish Trades Businesses &amp; Contractors That Get Consistent Booked Jobs.</h1>
               </div>
             </div>
@@ -754,8 +760,6 @@
             <div class="stretch-block">
               <div class="text-wrap">
                 <h2 class="section-heading">Inconsistent Jobs Is A <span class="underline-green">Visibility</span> Problem, Not A Skills Problem.</h2>
-              </div>
-              <div class="text-wrap text_margin-wrap">
                 <p class="paragraph">Why is your competitor booked out? Because when someone in your area searches for what you do their website shows up, they get recommended. You don't. It's not a skills problem. It's a visibility problem. And it's completely fixable.</p>
               </div>
             </div>
@@ -774,7 +778,7 @@
           <div class="small-bento-wrap stretch">
             <div class="stretch-block">
               <div class="text-wrap">
-                <div style="display:flex;align-items:center;gap:var(--h-para-gap);margin-bottom:8px;">
+                <div style="display:flex;align-items:center;gap:var(--h-para-gap);">
                   <div class="spark-container" style="width:40px;height:40px;padding:0;">
                     <div class="spark-inner" style="max-width:40px;max-height:40px;">
                       <div class="spark-line" style="background-color:var(--pale-ember);transform:translate(-50%,-50%) rotate(0deg);"></div>
@@ -790,8 +794,6 @@
                   </div>
                   <h3 class="sub-heading" style="color:var(--color-white);font-weight:500;">Get a Free Visibility Audit.</h3>
                 </div>
-              </div>
-              <div class="text-wrap text_margin-wrap">
                 <p class="paragraph" style="color:hsla(0,0%,100%,0.7);font-size:16px;">See how you are showing up online, and what steps you can take to improve - in order to book more jobs.</p>
               </div>
             </div>
@@ -847,8 +849,6 @@
               <div class="small-bento-wrap stretch">
                 <div class="text-wrap">
                   <h3 class="sub-heading"><strong>1. Attract:</strong></h3>
-                </div>
-                <div class="text-wrap text_margin-wrap">
                   <p class="paragraph">Get Recommended By Google (Search For Your Service - Your Customers Find You First).</p>
                 </div>
               </div>
@@ -857,8 +857,6 @@
               <div class="small-bento-wrap stretch">
                 <div class="text-wrap">
                   <h3 class="sub-heading"><strong>2. Convert:</strong></h3>
-                </div>
-                <div class="text-wrap text_margin-wrap">
                   <p class="paragraph">Where A Well Designed Website Becomes A Powerful Asset - Site Visitors Get In Touch.</p>
                 </div>
               </div>

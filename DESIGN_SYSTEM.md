@@ -179,10 +179,40 @@ The design system uses **Webflow variable modes** to handle responsiveness. Each
 - Side padding: 48-64px desktop, 16px tablet, 8px mobile portrait
 - Sections separated by dividers: 100px desktop → 56px mobile
 
-### Text Blocks
+### Text Wrap System
+- **Every piece of text** sits inside a `.text-wrap` container
+- `.text-wrap` has padding of `--text-wrap-padding`: 8px desktop → 4px mobile (all sides)
+- `.text-wrap` has internal gap of `--text-wrap-gap`: 16px desktop → 8px mobile
+- **Associated text** (e.g. heading + sub-heading that are intentionally close together) shares **one** `.text-wrap`
+- **Separate text** (e.g. a paragraph that is visually distinct from the heading group) gets its **own** `.text-wrap`
+- Do NOT wrap every individual text element — group by intent
+
+### Paragraph Rules
+- All `.paragraph` elements have a top margin of `--paragraph-top-margin`: 16px desktop → 8px mobile
+- Exception: a paragraph that is the first child inside a `.text-wrap` has no top margin (gap handles the spacing)
 - Paragraph max-width capped at 500px (`--boxy-paragraph`) for readability
-- Heading-to-paragraph gap: 16px
-- Button/CTA sits 48px below text content
+- Button/CTA sits `--button-holder-margin` (48px desktop → 24px mobile) below text content
+
+### Image Rules
+- All images (except the LEADSPARK vertical logo) have `max-width: 70%` and `max-height: 70%` of their parent container, and are centered
+- The LEADSPARK vertical logo image fills its container at `opacity: 0.2`
+
+### LEADSPARK Bento
+- Top padding matches the neighboring hero content div: `calc(--large-bento-padding + --text-wrap-padding)` for visual alignment
+- Bottom and side padding uses `--logo-side-padding`
+
+### Nav
+- Nav follows the same bento grid as the rest of the site
+- Logo sits in its own 1-column bento (matches LEADSPARK vertical column width)
+- Nav links are `position: absolute` centered horizontally in the nav links bento
+- CTA button right-aligned in nav links bento
+- Hamburger menu replaces nav links on tablet (≤991px) and below
+
+### Spark
+- 8 spokes at 45° intervals, 1px ember-colored lines
+- Max width/height: 200px
+- Center circle: pale ember, semi-transparent, glows on scroll
+- Whole spark rotates: slow idle spin + accelerates proportional to scroll speed
 
 ---
 
@@ -231,8 +261,9 @@ The design system uses **Webflow variable modes** to handle responsiveness. Each
   --small-bento-padding: 16px;
   --grid-gap: 8px;
   --h-para-gap: 16px;
-  --text-wrap-padding: 8px;
-  --paragraph-top-margin: 16px;
+  --text-wrap-padding: 8px;    /* → 4px on phone */
+  --text-wrap-gap: 16px;       /* → 8px on phone */
+  --paragraph-top-margin: 16px; /* → 8px on phone */
   --button-holder-margin: 48px;
   --divider-height: 100px;
   --min-bottom-pad: 64px;
