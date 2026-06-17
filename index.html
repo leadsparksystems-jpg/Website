@@ -486,7 +486,7 @@
       opacity: 0.2;
     }
 
-    /* ========== SPARK (4 spokes + center circle) ========== */
+    /* ========== SPARK (8 spokes + center circle, scroll-reactive) ========== */
     .spark-container {
       position: relative;
       width: 100%;
@@ -513,24 +513,25 @@
       height: 1px;
       background-color: var(--brand-ember);
       transform-origin: center center;
-      z-index: 3;
     }
-
-    .spark-line.fixed-h { transform: translate(-50%, -50%) rotate(0deg); }
-    .spark-line.fixed-v { transform: translate(-50%, -50%) rotate(90deg); }
-    .spark-line.diag-1 { z-index: 3; }
-    .spark-line.diag-2 { z-index: 1; }
 
     .spark-center {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 12px;
-      height: 12px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
-      background-color: var(--brand-ember);
+      background-color: var(--pale-ember);
+      opacity: 0.6;
       z-index: 2;
+      transition: opacity 0.3s, box-shadow 0.3s;
+    }
+
+    .spark-center.active {
+      opacity: 1;
+      box-shadow: 0 0 12px 4px hsla(22, 70%, 55%, 0.3);
     }
 
     /* ========== SVG / IMAGE CONTAINERS ========== */
@@ -711,15 +712,19 @@
           </div>
         </div>
 
-        <!-- Spark (4 spokes + center circle) -->
+        <!-- Spark (8 spokes + center circle, scroll-reactive) -->
         <div class="fill-bento hero-spark">
           <div class="spark-container">
-            <div class="spark-inner">
-              <div class="spark-line fixed-h"></div>
-              <div class="spark-line fixed-v"></div>
-              <div class="spark-line diag-1"></div>
-              <div class="spark-line diag-2"></div>
-              <div class="spark-center"></div>
+            <div class="spark-inner" id="hero-spark">
+              <div class="spark-line"></div>
+              <div class="spark-line"></div>
+              <div class="spark-line"></div>
+              <div class="spark-line"></div>
+              <div class="spark-line"></div>
+              <div class="spark-line"></div>
+              <div class="spark-line"></div>
+              <div class="spark-line"></div>
+              <div class="spark-center" id="spark-center"></div>
             </div>
           </div>
         </div>
@@ -772,11 +777,15 @@
                 <div style="display:flex;align-items:center;gap:var(--h-para-gap);margin-bottom:8px;">
                   <div class="spark-container" style="width:40px;height:40px;padding:0;">
                     <div class="spark-inner" style="max-width:40px;max-height:40px;">
-                      <div class="spark-line" style="background-color:var(--pale-ember);"></div>
-                      <div class="spark-line" style="background-color:var(--pale-ember);transform:translate(-50%,-50%) rotate(90deg);"></div>
+                      <div class="spark-line" style="background-color:var(--pale-ember);transform:translate(-50%,-50%) rotate(0deg);"></div>
+                      <div class="spark-line" style="background-color:var(--pale-ember);transform:translate(-50%,-50%) rotate(22.5deg);"></div>
                       <div class="spark-line" style="background-color:var(--pale-ember);transform:translate(-50%,-50%) rotate(45deg);"></div>
-                      <div class="spark-line" style="background-color:var(--pale-ember);transform:translate(-50%,-50%) rotate(-45deg);"></div>
-                      <div class="spark-center" style="width:6px;height:6px;"></div>
+                      <div class="spark-line" style="background-color:var(--pale-ember);transform:translate(-50%,-50%) rotate(67.5deg);"></div>
+                      <div class="spark-line" style="background-color:var(--pale-ember);transform:translate(-50%,-50%) rotate(90deg);"></div>
+                      <div class="spark-line" style="background-color:var(--pale-ember);transform:translate(-50%,-50%) rotate(112.5deg);"></div>
+                      <div class="spark-line" style="background-color:var(--pale-ember);transform:translate(-50%,-50%) rotate(135deg);"></div>
+                      <div class="spark-line" style="background-color:var(--pale-ember);transform:translate(-50%,-50%) rotate(157.5deg);"></div>
+                      <div class="spark-center" style="width:8px;height:8px;background-color:var(--pale-ember);opacity:0.5;"></div>
                     </div>
                   </div>
                   <h3 class="sub-heading" style="color:var(--color-white);font-weight:500;">Get a Free Visibility Audit.</h3>
@@ -888,39 +897,47 @@
 
   <script>
     (function() {
-      var diag1 = document.querySelector('.diag-1');
-      var diag2 = document.querySelector('.diag-2');
-      if (!diag1 || !diag2) return;
+      var spark = document.getElementById('hero-spark');
+      var center = document.getElementById('spark-center');
+      if (!spark) return;
 
-      var scrollSpeed = 0;
+      var spokes = spark.querySelectorAll('.spark-line');
+      var angle = 0;
+      var velocity = 0;
       var lastScroll = window.scrollY;
-      var baseSpeed1 = 1;
-      var baseSpeed2 = 0.7;
-      var angle1 = 45;
-      var angle2 = -45;
+      var idleSpeed = 0.08;
+      var scrollBoost = 0;
+
+      function setSpokes() {
+        var baseSpacing = 360 / spokes.length;
+        for (var i = 0; i < spokes.length; i++) {
+          var a = angle + (baseSpacing * i);
+          spokes[i].style.transform = 'translate(-50%, -50%) rotate(' + a + 'deg)';
+        }
+      }
 
       function tick() {
         var currentScroll = window.scrollY;
         var delta = Math.abs(currentScroll - lastScroll);
         lastScroll = currentScroll;
 
-        scrollSpeed += (delta - scrollSpeed) * 0.1;
-        scrollSpeed *= 0.95;
+        scrollBoost += (delta * 0.8 - scrollBoost) * 0.12;
+        scrollBoost *= 0.96;
 
-        var speed1 = baseSpeed1 + scrollSpeed * 0.3;
-        var speed2 = baseSpeed2 + scrollSpeed * 0.2;
+        velocity = idleSpeed + scrollBoost * 0.15;
+        angle += velocity;
 
-        angle1 += speed1 * 0.15;
-        angle2 += speed2 * 0.15;
+        if (scrollBoost > 1.5 && center) {
+          center.classList.add('active');
+        } else if (center) {
+          center.classList.remove('active');
+        }
 
-        diag1.style.transform = 'translate(-50%, -50%) rotate(' + angle1 + 'deg)';
-        diag2.style.transform = 'translate(-50%, -50%) rotate(' + angle2 + 'deg)';
-
+        setSpokes();
         requestAnimationFrame(tick);
       }
 
-      diag1.style.animation = 'none';
-      diag2.style.animation = 'none';
+      setSpokes();
       requestAnimationFrame(tick);
     })();
   </script>
