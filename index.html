@@ -403,29 +403,36 @@
     /* ========== VERTICAL LOGO TEXT ========== */
     .logo-bento-inner {
       display: flex;
-      align-items: center;
+      align-items: stretch;
       justify-content: center;
       width: 100%;
       height: 100%;
       padding: 0 var(--logo-side-padding);
       padding-top: calc(var(--large-bento-padding) + var(--text-wrap-padding));
+      padding-bottom: var(--logo-side-padding);
+      container-type: size;
+      overflow: hidden;
     }
 
     .vertical-text {
       writing-mode: vertical-lr;
       text-orientation: mixed;
       font-family: var(--font-headings);
-      font-size: clamp(14px, 2.5vw, 28px);
       font-weight: 700;
       letter-spacing: 0.3em;
       color: var(--forest-green);
+      opacity: 0.15;
       white-space: nowrap;
       height: 100%;
+      width: 100%;
       display: flex;
       align-items: center;
+      justify-content: center;
+      font-size: 100cqh;
+      overflow: hidden;
     }
 
-    /* ========== SPARK (6 divs, 1px thick, orange) ========== */
+    /* ========== SPARK (cross + X, 6 divs, 1px thick, orange) ========== */
     .spark-container {
       position: relative;
       width: 100%;
@@ -433,21 +440,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-
-    .spark-container.spin {
-      animation: spin 12s linear infinite;
-    }
-
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+      padding: var(--large-bento-padding);
     }
 
     .spark-inner {
       position: relative;
-      width: 80%;
-      height: 80%;
+      width: 100%;
+      aspect-ratio: 1;
     }
 
     .spark-line {
@@ -460,12 +459,27 @@
       transform-origin: center center;
     }
 
-    .spark-line:nth-child(1) { transform: translate(-50%, -50%) rotate(0deg); }
-    .spark-line:nth-child(2) { transform: translate(-50%, -50%) rotate(30deg); }
-    .spark-line:nth-child(3) { transform: translate(-50%, -50%) rotate(60deg); }
-    .spark-line:nth-child(4) { transform: translate(-50%, -50%) rotate(90deg); }
-    .spark-line:nth-child(5) { transform: translate(-50%, -50%) rotate(120deg); }
-    .spark-line:nth-child(6) { transform: translate(-50%, -50%) rotate(150deg); }
+    /* Fixed cross lines (vertical + horizontal) */
+    .spark-line.fixed-h { transform: translate(-50%, -50%) rotate(0deg); }
+    .spark-line.fixed-v { transform: translate(-50%, -50%) rotate(90deg); }
+
+    /* Diagonal lines that rotate */
+    .spark-line.diag-1 { animation: spin-slow 20s linear infinite; }
+    .spark-line.diag-2 { animation: spin-slower 28s linear infinite; }
+
+    @keyframes spin-slow {
+      from { transform: translate(-50%, -50%) rotate(45deg); }
+      to { transform: translate(-50%, -50%) rotate(405deg); }
+    }
+
+    @keyframes spin-slower {
+      from { transform: translate(-50%, -50%) rotate(-45deg); }
+      to { transform: translate(-50%, -50%) rotate(315deg); }
+    }
+
+    /* Extra static lines at 22.5 and 67.5 to fill out the star shape */
+    .spark-line.static-a { transform: translate(-50%, -50%) rotate(22.5deg); }
+    .spark-line.static-b { transform: translate(-50%, -50%) rotate(67.5deg); }
 
     /* ========== SVG / IMAGE CONTAINERS ========== */
     .svg-container {
@@ -650,16 +664,16 @@
           </div>
         </div>
 
-        <!-- Spark Illustration (6 divs, orange, spinning) -->
+        <!-- Spark Illustration (cross fixed + X diagonals rotate) -->
         <div class="fill-bento hero-spark">
-          <div class="spark-container spin">
+          <div class="spark-container">
             <div class="spark-inner">
-              <div class="spark-line"></div>
-              <div class="spark-line"></div>
-              <div class="spark-line"></div>
-              <div class="spark-line"></div>
-              <div class="spark-line"></div>
-              <div class="spark-line"></div>
+              <div class="spark-line fixed-h"></div>
+              <div class="spark-line fixed-v"></div>
+              <div class="spark-line diag-1"></div>
+              <div class="spark-line diag-2"></div>
+              <div class="spark-line static-a"></div>
+              <div class="spark-line static-b"></div>
             </div>
           </div>
         </div>
@@ -838,6 +852,46 @@
   </section>
 
   <div class="divider"></div>
+
+  <script>
+    (function() {
+      var diag1 = document.querySelector('.diag-1');
+      var diag2 = document.querySelector('.diag-2');
+      if (!diag1 || !diag2) return;
+
+      var scrollSpeed = 0;
+      var lastScroll = window.scrollY;
+      var baseSpeed1 = 1;
+      var baseSpeed2 = 0.7;
+      var angle1 = 45;
+      var angle2 = -45;
+      var raf;
+
+      function tick() {
+        var currentScroll = window.scrollY;
+        var delta = Math.abs(currentScroll - lastScroll);
+        lastScroll = currentScroll;
+
+        scrollSpeed += (delta - scrollSpeed) * 0.1;
+        scrollSpeed *= 0.95;
+
+        var speed1 = baseSpeed1 + scrollSpeed * 0.3;
+        var speed2 = baseSpeed2 + scrollSpeed * 0.2;
+
+        angle1 += speed1 * 0.15;
+        angle2 += speed2 * 0.15;
+
+        diag1.style.transform = 'translate(-50%, -50%) rotate(' + angle1 + 'deg)';
+        diag2.style.transform = 'translate(-50%, -50%) rotate(' + angle2 + 'deg)';
+
+        raf = requestAnimationFrame(tick);
+      }
+
+      diag1.style.animation = 'none';
+      diag2.style.animation = 'none';
+      raf = requestAnimationFrame(tick);
+    })();
+  </script>
 
 </body>
 </html>
