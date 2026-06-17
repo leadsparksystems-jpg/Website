@@ -613,16 +613,17 @@
 
     @media (max-width: 767px) {
       .bento-grid.hero-grid {
-        grid-template-rows: min-content auto;
+        grid-template-rows: repeat(6, minmax(0, 1fr));
         max-height: unset;
       }
-      .hero-vertical { grid-column: 1 / 2; grid-row: 1 / 2; min-height: 0; overflow: hidden; }
-      .hero-vertical .logo-bento-inner img { height: 100%; object-fit: cover; }
-      .hero-main { grid-column: 2 / 7; grid-row: 1 / 2; }
-      .hero-spark { grid-column: 1 / 4; grid-row: 2 / 3; }
-      .hero-stats { grid-column: 4 / 7; grid-row: 2 / 3; }
+      .hero-vertical { grid-column: 1 / 2; grid-row: 1 / 5; overflow: hidden; }
+      .hero-vertical .logo-bento-inner { padding-top: calc(var(--large-bento-padding) + var(--text-wrap-padding)); }
+      .hero-vertical .logo-bento-inner img { width: 100%; height: auto; object-fit: contain; object-position: top center; }
+      .hero-main { grid-column: 2 / 7; grid-row: 1 / 5; }
       .hero-main .stretch-wrap { height: auto; justify-content: flex-start; gap: 64px; }
       .hero-main .button-holder { margin-top: 32px; }
+      .hero-spark { grid-column: 1 / 4; grid-row: 5 / 7; }
+      .hero-stats { grid-column: 4 / 7; grid-row: 5 / 7; }
     }
 
     /* ===================================================================
