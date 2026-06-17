@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 140" fill="none">
+  <!-- Page/document shape -->
+  <rect x="10" y="10" width="80" height="100" rx="4" stroke="#6b6862" stroke-width="2.5" fill="none"/>
+  <polyline points="60,10 60,35 85,35" stroke="#6b6862" stroke-width="2" fill="none"/>
+  <!-- Smiley face on page -->
+  <circle cx="35" cy="55" r="4" fill="#d8602f"/>
+  <circle cx="55" cy="55" r="4" fill="#d8602f"/>
+  <path d="M30 72 Q42 82 60 72" stroke="#d8602f" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- 404 text -->
+  <text x="110" y="85" font-family="'Bricolage Grotesque', Arial, sans-serif" font-size="72" font-weight="800" fill="#273730" opacity="0.85">404</text>
+  <!-- Page Not Loading subtitle -->
+  <text x="110" y="108" font-family="'DM Mono', monospace" font-size="12" fill="#6b6862">Page Not Loading</text>
+</svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" fill="none">
+  <!-- Outer eye shape - hand-drawn style with thick textured stroke -->
+  <ellipse cx="400" cy="225" rx="380" ry="180" stroke="#2a3a30" stroke-width="18" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Inner circle - ember color, double ring effect -->
+  <circle cx="420" cy="215" r="110" stroke="#c0522a" stroke-width="3" fill="none"/>
+  <circle cx="415" cy="220" r="100" stroke="#c0522a" stroke-width="2.5" fill="none"/>
+  <!-- Diagonal line through circle -->
+  <line x1="355" y1="310" x2="470" y2="130" stroke="#c0522a" stroke-width="4" stroke-linecap="round"/>
+  <line x1="350" y1="305" x2="465" y2="128" stroke="#c0522a" stroke-width="2" stroke-linecap="round"/>
+</svg>
