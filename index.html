@@ -633,9 +633,11 @@
     }
 
     @media (max-width: 767px) {
-      .s2-text { grid-column: 1 / -1; }
-      .s2-audit { grid-column: 1 / -1; }
-      .s2-eye { grid-column: 1 / -1; min-height: 180px; }
+      /* Text/header bento always first (full width), then the two
+         supporting bentos side-by-side below, equal height. */
+      .s2-text { grid-column: 1 / -1; grid-row: 1; order: 0; }
+      .s2-eye { grid-column: 1 / 4; grid-row: 2; order: 0; min-height: 0; }
+      .s2-audit { grid-column: 4 / -1; grid-row: 2; order: 0; }
     }
 
     /* ===================================================================
