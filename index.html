@@ -218,7 +218,10 @@
     .universal-section {
       width: 100%;
       padding: var(--section-tb-padding) var(--section-side-padding);
+      margin-bottom: var(--divider-height);
     }
+
+    .universal-section:last-of-type { margin-bottom: 0; }
 
     .universal-container {
       max-width: var(--max-section-width);
@@ -763,8 +766,6 @@
     </div>
   </section>
 
-  <div class="divider"></div>
-
   <!-- ========== SECTION 2 — VISIBILITY PROBLEM ========== -->
   <section class="universal-section">
     <div class="universal-container">
@@ -830,8 +831,6 @@
       </div>
     </div>
   </section>
-
-  <div class="divider"></div>
 
   <!-- ========== SECTION 3 — CTA + SERVICES ========== -->
   <section class="universal-section">
@@ -913,8 +912,6 @@
       </div>
     </div>
   </section>
-
-  <div class="divider"></div>
 
   <script>
     (function() {
