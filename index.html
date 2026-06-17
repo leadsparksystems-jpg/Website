@@ -584,8 +584,12 @@
 
     @media (max-width: 767px) {
       .card-grid { grid-template-columns: 1fr; }
-      .cta-btn { font-size: 12px; padding-left: 16px; letter-spacing: 0.1em; }
-      .cta-btn-outline { font-size: 12px; padding: 0 12px; letter-spacing: 0.1em; }
+      .cta-btn { font-size: 12px; height: 28px; padding-left: 16px; gap: 6px; letter-spacing: 0.1em; border-radius: 16px; }
+      .cta-btn .arrow-circle { width: 22px; height: 22px; }
+      .cta-btn .arrow-circle svg { width: 10px; height: 10px; }
+      .cta-btn-outline { font-size: 12px; height: 28px; padding: 0 12px; gap: 6px; letter-spacing: 0.1em; border-radius: 16px; }
+      .cta-btn-outline .arrow-circle { width: 22px; height: 22px; }
+      .cta-btn-outline .arrow-circle svg { width: 10px; height: 10px; }
     }
 
     /* ===================================================================
