@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeadSpark — End The Feast Or Famine Cycle</title>
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400;12..96,75..100,500;12..96,75..100,600;12..96,75..100,700&family=DM+Mono&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--background);
+      font-family: 'Bricolage Grotesque', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ===== HERO SECTION ===== */
+    .hero-section {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      background: var(--background);
+      max-height: var(--hero-max-height);
+    }
+
+    .hero-section__inner {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: var(--hero-max-width);
+      padding-top: var(--sections-hero-top-padding);
+      padding-bottom: var(--sections-hero-bottom-padding);
+      padding-left: var(--sections-hero-side-padding);
+      padding-right: var(--sections-hero-side-padding);
+      overflow: visible;
+    }
+
+    /* 12-col / 2-row bento grid */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: 1fr 1fr;
+      gap: var(--main-grid-hero-grid-gap);
+      padding: var(--main-grid-hero-grid-gap);
+      flex: 1 0 0;
+      min-height: 0;
+      overflow: visible;
+    }
+
+    /* ===== BENTOS ===== */
+    .bento {
+      background: var(--primary-background-white);
+      border-radius: var(--bento-radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Col 1 — LEADSPARK vertical text */
+    .bento--leadspark {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .bento--leadspark img {
+      height: 100%;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+      opacity: 0.6;
+    }
+
+    /* Col 2–9 — Main content */
+    .bento--main {
+      grid-column: 2 / span 8;
+      grid-row: 1 / span 2;
+      justify-content: space-between;
+      padding: 24px 32px 24px 32px;
+      gap: 0;
+    }
+
+    .bento--main__top {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .hero-heading {
+      font-size: var(--text-hero-heading);
+      font-weight: 700;
+      color: var(--dark-text);
+      text-transform: uppercase;
+      line-height: 1.05;
+      font-variation-settings: 'opsz' 14, 'wdth' 100;
+    }
+
+    .hero-heading .accent {
+      color: #b84a1e;
+    }
+
+    .hero-subheading {
+      font-size: var(--text-secondary-card-heading);
+      font-weight: 400;
+      color: var(--secondary-text);
+      text-transform: capitalize;
+      margin-top: 12px;
+      font-variation-settings: 'opsz' 14, 'wdth' 100;
+      line-height: 1.4;
+    }
+
+    .bento--main__bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .text-wrap-paragraph {
+      padding-top: var(--text-wrap-default-top-padding);
+      padding-bottom: var(--text-wrap-default-bottom-padding);
+      padding-left: var(--text-wrap-default-side-padding);
+      padding-right: var(--text-wrap-default-side-padding);
+    }
+
+    .paragraph {
+      font-family: 'DM Mono', monospace;
+      font-size: var(--text-paragraph);
+      font-weight: 400;
+      color: var(--paragraph);
+      line-height: 1.6;
+      max-width: 460px;
+      text-transform: capitalize;
+    }
+
+    /* Col 10–12 top — draught image */
+    .bento--image {
+      grid-column: 10 / span 3;
+      grid-row: 1;
+      align-items: center;
+      justify-content: center;
+      padding: var(--small-bento-vertical-padding) var(--small-bento-side-padding);
+    }
+
+    .bento--image img {
+      max-height: 193px;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    /* Col 10–12 bottom — stats */
+    .bento--stats {
+      grid-column: 10 / span 3;
+      grid-row: 2;
+      justify-content: space-between;
+      padding: var(--small-bento-vertical-padding) var(--small-bento-side-padding);
+      gap: var(--small-bento-gap);
+    }
+
+    .stats-text {
+      padding: var(--text-wrap-stat-vertical-padding) var(--text-wrap-stat-side-padding);
+      display: flex;
+      flex-direction: column;
+      gap: var(--text-wrap-stat-gap);
+      flex: 1 0 0;
+    }
+
+    .stat-number {
+      font-size: var(--text-stat);
+      font-weight: 600;
+      color: var(--brand-green);
+      text-transform: capitalize;
+      line-height: 1;
+      font-variation-settings: 'opsz' 14, 'wdth' 100;
+    }
+
+    .stat-label {
+      font-size: var(--text-secondary-card-heading);
+      font-weight: 500;
+      color: var(--paragraph);
+      text-transform: capitalize;
+      line-height: 1.3;
+      font-variation-settings: 'opsz' 14, 'wdth' 100;
+    }
+
+    /* ===== BUTTONS ===== */
+
+    /* CTA primary button */
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--soft-ember);
+      border: none;
+      border-radius: var(--button-radius);
+      padding: 6px 6px 6px 32px;
+      cursor: pointer;
+      box-shadow: var(--cta-button-shadow);
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .btn-cta:hover { opacity: 0.9; }
+
+    .btn-cta__label {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: var(--text-label);
+      font-weight: 500;
+      color: var(--dark-green);
+      letter-spacing: 1.92px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      line-height: 1.2;
+      padding: 6px 0;
+      font-variation-settings: 'opsz' 14, 'wdth' 100;
+    }
+
+    .btn-cta__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: var(--button-radius);
+      background: var(--soft-ember);
+      box-shadow: var(--arrow-circle-shadow);
+      flex-shrink: 0;
+      padding: 7px 8px;
+    }
+
+    .btn-cta__icon img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* Page scroll link (SEE HOW) */
+    .btn-scroll {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 6px;
+      border-radius: var(--button-radius);
+      border: none;
+      background: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .btn-scroll:hover { opacity: 0.7; }
+
+    .btn-scroll__label {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: var(--text-label);
+      font-weight: 500;
+      color: var(--dark-green);
+      letter-spacing: 1.92px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      line-height: 1.2;
+      padding: 6px 0;
+      font-variation-settings: 'opsz' 14, 'wdth' 100;
+    }
+
+    .btn-scroll__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 31px;
+      height: 31px;
+      border-radius: var(--button-radius);
+      padding: 5px;
+    }
+
+    .btn-scroll__icon img {
+      width: 100%;
+      height: auto;
+      transform: rotate(-45deg);
+      display: block;
+    }
+
+    .stats-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+  </style>
+</head>
+<body>
+
+  <section class="hero-section">
+    <div class="hero-section__inner">
+      <div class="hero-grid">
+
+        <!-- Bento 1: LEADSPARK vertical text -->
+        <div class="bento bento--leadspark">
+          <img src="LEADSPARK.png" alt="LeadSpark" />
+        </div>
+
+        <!-- Bento 2: Main content -->
+        <div class="bento bento--main">
+          <div class="bento--main__top">
+            <h1 class="hero-heading">
+              <span class="accent">End</span> the feast or famine cycle
+            </h1>
+            <p class="hero-subheading">
+              Growth Operation for Irish Trades Businesses &amp; Contractors<br />
+              Through their website and customer management.
+            </p>
+          </div>
+          <div class="bento--main__bottom">
+            <div class="text-wrap-paragraph">
+              <p class="paragraph">
+                We build custom systems that keep your job book full, while also automatically managing it.
+              </p>
+            </div>
+            <div>
+              <a href="#contact" class="btn-cta">
+                <span class="btn-cta__label">Grow My Business</span>
+                <span class="btn-cta__icon">
+                  <img src="https://www.figma.com/api/mcp/asset/62074d5b-d35d-48d4-bf4c-d26dbdeddb5b" alt="" aria-hidden="true" />
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bento 3: Draught image -->
+        <div class="bento bento--image">
+          <img src="draught.png" alt="" aria-hidden="true" />
+        </div>
+
+        <!-- Bento 4: Stats -->
+        <div class="bento bento--stats">
+          <div class="stats-text">
+            <p class="stat-number">€10k-30k</p>
+            <p class="stat-label">Jobs Consistently generated For Partners</p>
+          </div>
+          <div class="stats-bottom">
+            <a href="#results" class="btn-scroll">
+              <span class="btn-scroll__label">See How</span>
+              <span class="btn-scroll__icon">
+                <img src="https://www.figma.com/api/mcp/asset/62074d5b-d35d-48d4-bf4c-d26dbdeddb5b" alt="" aria-hidden="true" />
+              </span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

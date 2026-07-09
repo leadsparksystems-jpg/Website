@@ -1,0 +1,57 @@
+/* ===== DESIGN TOKENS ===== */
+
+:root {
+  /* Colors */
+  --background: #d9d2ca;
+  --primary-background-white: #e5ded7;
+  --dark-text: #273730;
+  --dark-green: #273730;
+  --brand-green: #40775f;
+  --soft-ember: #e8a075;
+  --paragraph: rgba(20, 41, 26, 0.8);
+  --secondary-text: rgba(20, 41, 26, 0.6);
+
+  /* Typography */
+  --text-hero-heading: 66px;
+  --text-secondary-card-heading: 20px;
+  --text-paragraph: 16px;
+  --text-stat: 38px;
+  --text-label: 16px;
+
+  /* Spacing — sections/hero */
+  --sections-hero-top-padding: 0px;
+  --sections-hero-bottom-padding: 56px;
+  --sections-hero-side-padding: 32px;
+
+  /* Spacing — grid */
+  --main-grid-hero-grid-gap: 8px;
+
+  /* Spacing — small bento */
+  --small-bento-gap: 8px;
+  --small-bento-side-padding: 16px;
+  --small-bento-vertical-padding: 16px;
+
+  /* Spacing — text wraps */
+  --text-wrap-stat-gap: 16px;
+  --text-wrap-stat-side-padding: 8px;
+  --text-wrap-stat-vertical-padding: 8px;
+  --text-wrap-default-gap: 0px;
+  --text-wrap-default-bottom-padding: 48px;
+  --text-wrap-default-top-padding: 8px;
+  --text-wrap-default-side-padding: 8px;
+
+  /* Spacing — button wrap */
+  --button-wrap-gap: 0px;
+
+  /* Radius */
+  --bento-radius: 8px;
+  --button-radius: 200px;
+
+  /* Shadows */
+  --cta-button-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.2);
+  --arrow-circle-shadow: inset 0px 1px 4px 0px rgba(0, 0, 0, 0.25);
+
+  /* Max dimensions */
+  --hero-max-width: 1300px;
+  --hero-max-height: 86vh;
+}
