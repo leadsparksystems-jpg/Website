@@ -208,6 +208,7 @@
       box-shadow: var(--cta-button-shadow);
       text-decoration: none;
       transition: opacity 0.2s ease;
+      overflow: hidden;
     }
 
     .btn-cta:hover { opacity: 0.9; }
@@ -225,22 +226,44 @@
       font-variation-settings: 'opsz' 14, 'wdth' 100;
     }
 
+    /* Arrow circle — same bg as button, recessed with inset shadow */
     .btn-cta__icon {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 40px;
-      height: 40px;
+      align-self: stretch;
       border-radius: var(--button-radius);
-      background: var(--soft-ember);
-      box-shadow: var(--arrow-circle-shadow);
       flex-shrink: 0;
-      padding: 7px 8px;
+      padding: 7px 16px;
+      overflow: hidden;
+    }
+
+    /* Base fill layer */
+    .btn-cta__icon::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: var(--soft-ember);
+    }
+
+    /* Inset shadow overlay — creates the recessed circle look */
+    .btn-cta__icon::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      box-shadow: inset 0px 1px 4px 0px rgba(0, 0, 0, 0.25);
+      pointer-events: none;
     }
 
     .btn-cta__icon img {
-      width: 100%;
-      height: auto;
+      position: relative;
+      z-index: 1;
+      aspect-ratio: 23 / 15.5;
+      flex: 1 0 0;
+      min-height: 1px;
       object-fit: contain;
       display: block;
     }
@@ -330,7 +353,7 @@
               <a href="#contact" class="btn-cta">
                 <span class="btn-cta__label">Grow My Business</span>
                 <span class="btn-cta__icon">
-                  <img src="https://www.figma.com/api/mcp/asset/62074d5b-d35d-48d4-bf4c-d26dbdeddb5b" alt="" aria-hidden="true" />
+                  <img src="https://www.figma.com/api/mcp/asset/6410c617-69c9-4a12-b06f-d64d6668a906" alt="" aria-hidden="true" />
                 </span>
               </a>
             </div>
