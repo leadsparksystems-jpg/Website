@@ -38,15 +38,13 @@
       overflow: visible;
     }
 
-    /* 12-col / 2-row bento grid */
+    /* 12-col / 2-row bento grid — rows hug main content */
     .hero-grid {
       display: grid;
       grid-template-columns: repeat(12, 1fr);
-      grid-template-rows: 1fr 1fr;
+      grid-template-rows: auto auto;
       gap: var(--main-grid-hero-grid-gap);
       padding: var(--main-grid-hero-grid-gap);
-      flex: 1 0 0;
-      min-height: 0;
       overflow: visible;
     }
 
@@ -59,12 +57,18 @@
       flex-direction: column;
     }
 
-    /* Col 1 — LEADSPARK vertical text */
+    /* Fill bentos stretch to the row height set by the hug bento */
+    .bento--fill {
+      align-self: stretch;
+    }
+
+    /* Col 1 — LEADSPARK vertical text — fill */
     .bento--leadspark {
       grid-column: 1;
       grid-row: 1 / span 2;
       align-items: center;
       justify-content: center;
+      align-self: stretch;
     }
 
     .bento--leadspark img {
@@ -75,13 +79,15 @@
       opacity: 0.6;
     }
 
-    /* Col 2–9 — Main content */
+    /* Col 2–9 — Main content — hug bento, sets row height */
     .bento--main {
       grid-column: 2 / span 8;
       grid-row: 1 / span 2;
       justify-content: space-between;
       padding: 24px 32px 24px 32px;
       gap: 0;
+      align-self: start; /* hug: don't stretch, let content dictate height */
+      height: auto;
     }
 
     .bento--main__top {
@@ -331,13 +337,13 @@
           </div>
         </div>
 
-        <!-- Bento 3: Draught image -->
-        <div class="bento bento--image">
+        <!-- Bento 3: Draught image — fill -->
+        <div class="bento bento--image bento--fill">
           <img src="draught.png" alt="" aria-hidden="true" />
         </div>
 
-        <!-- Bento 4: Stats -->
-        <div class="bento bento--stats">
+        <!-- Bento 4: Stats — fill -->
+        <div class="bento bento--stats bento--fill">
           <div class="stats-text">
             <p class="stat-number">€10k-30k</p>
             <p class="stat-label">Jobs Consistently generated For Partners</p>
