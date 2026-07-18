@@ -296,7 +296,16 @@
       if (back) { e.preventDefault(); goBack(); return; }
 
       var skip = e.target.closest('[data-qf-skip]');
-      if (skip) { e.preventDefault(); goNextSkipGroup(); return; }
+      if (skip) {
+        e.preventDefault();
+        var targetNum = skip.getAttribute('data-qf-skip');
+        var targetStep = form.querySelector('[data-step="' + targetNum + '"]');
+        if (targetStep) {
+          stepHistory.push(currentStep);
+          showStep(targetStep);
+        }
+        return;
+      }
 
       var add = e.target.closest('[data-qf-add-another]');
       if (add) { e.preventDefault(); goNext(); return; }
