@@ -295,8 +295,11 @@
       var back = e.target.closest('[data-qf-back]');
       if (back) { e.preventDefault(); goBack(); return; }
 
+      var skip = e.target.closest('[data-qf-skip]');
+      if (skip) { e.preventDefault(); goNextSkipGroup(); return; }
+
       var add = e.target.closest('[data-qf-add-another]');
-      if (add) { e.preventDefault(); handleAddAnother(); return; }
+      if (add) { e.preventDefault(); goNext(); return; }
 
       var next = e.target.closest('[data-qf-next]');
       if (!next) return;
@@ -304,10 +307,7 @@
       if (next.closest('label.w-radio, .w-radio')) return;
 
       e.preventDefault();
-
-      var hasAddAnother = currentStep.querySelector('[data-qf-add-another]');
-      if (hasAddAnother) goNextSkipGroup();
-      else goNext();
+      goNext();
     });
   }
 
