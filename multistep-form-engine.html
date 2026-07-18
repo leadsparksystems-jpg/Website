@@ -53,11 +53,13 @@
         'grid-column: 1;' +
         'opacity: 0;' +
         'pointer-events: none;' +
-        'transition: opacity 0.2s ease;' +
+        'visibility: hidden;' +
+        'transition: opacity 0.2s ease, visibility 0.2s ease;' +
       '}' +
       '#' + CONFIG.formId + ' > [data-step].qf-active {' +
         'opacity: 1;' +
         'pointer-events: auto;' +
+        'visibility: visible;' +
       '}';
     document.head.appendChild(s);
   }
