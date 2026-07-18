@@ -152,22 +152,7 @@
   }
 
   function handleAddAnother() {
-    var currentBranch = currentStep.getAttribute('data-branch');
-
-    for (var i = 0; i < allSteps.length; i++) {
-      var step = allSteps[i];
-      var stepNum = step.getAttribute('data-step');
-      if (
-        step.hasAttribute('data-add-step') &&
-        step.getAttribute('data-branch') === currentBranch &&
-        !addAnotherActive.has(stepNum)
-      ) {
-        addAnotherActive.add(stepNum);
-        stepHistory.push(currentStep);
-        showStep(step);
-        return;
-      }
-    }
+    goNext();
   }
 
   // --- Branch management ---
@@ -320,13 +305,8 @@
 
       e.preventDefault();
 
-      var currentBranch = currentStep.getAttribute('data-branch');
-      var hasAddSteps = currentBranch && allSteps.some(function (s) {
-        return s.hasAttribute('data-add-step') &&
-          s.getAttribute('data-branch') === currentBranch;
-      });
-
-      if (hasAddSteps) goNextSkipGroup();
+      var hasAddAnother = currentStep.querySelector('[data-qf-add-another]');
+      if (hasAddAnother) goNextSkipGroup();
       else goNext();
     });
   }
