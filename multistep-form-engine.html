@@ -53,10 +53,12 @@
         'grid-column: 1;' +
         'visibility: hidden;' +
         'pointer-events: none;' +
+        'z-index: 0;' +
       '}' +
       '#' + CONFIG.formId + ' > [data-step].qf-active {' +
         'visibility: visible;' +
         'pointer-events: auto;' +
+        'z-index: 1;' +
       '}';
     document.head.appendChild(s);
   }
