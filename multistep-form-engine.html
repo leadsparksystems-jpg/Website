@@ -43,27 +43,25 @@
   function injectStyles() {
     var s = document.createElement('style');
     s.textContent =
-      '#' + CONFIG.formId + ' {' +
-        'display: grid !important;' +
-        'grid-template-columns: 1fr;' +
-        'grid-template-rows: 1fr;' +
-      '}' +
       '#' + CONFIG.formId + ' > [data-step] {' +
-        'grid-row: 1;' +
-        'grid-column: 1;' +
-        'opacity: 0;' +
-        'pointer-events: none;' +
-        'visibility: hidden;' +
-        'z-index: 0;' +
-        'transition: opacity 0.2s ease, visibility 0.2s ease;' +
+        'display: none;' +
       '}' +
       '#' + CONFIG.formId + ' > [data-step].qf-active {' +
-        'opacity: 1;' +
-        'pointer-events: auto;' +
-        'visibility: visible;' +
-        'z-index: 1;' +
+        'display: flex;' +
+        'flex-direction: column;' +
       '}';
     document.head.appendChild(s);
+  }
+
+  function setMinHeight() {
+    allSteps.forEach(function (step) { step.style.display = 'flex'; });
+    var maxH = 0;
+    allSteps.forEach(function (step) {
+      var h = step.offsetHeight;
+      if (h > maxH) maxH = h;
+    });
+    allSteps.forEach(function (step) { step.style.display = ''; });
+    form.style.minHeight = maxH + 'px';
   }
 
   // --- Step setup ---
@@ -327,6 +325,7 @@
   function init() {
     injectStyles();
     collectSteps();
+    setMinHeight();
     bindEvents();
     if (allSteps.length) showStep(allSteps[0]);
   }
