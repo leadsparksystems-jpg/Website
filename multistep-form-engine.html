@@ -242,6 +242,11 @@
     step.querySelectorAll('input, select, textarea').forEach(function (f) {
       if (f.type === 'radio' || f.type === 'checkbox') {
         f.checked = false;
+        var wrapper = f.closest('.w-radio, .w-checkbox');
+        if (wrapper) {
+          var customInput = wrapper.querySelector('.w-radio-input, .w-checkbox-input');
+          if (customInput) customInput.classList.remove('w--redirected-checked');
+        }
       } else {
         f.value = '';
       }
