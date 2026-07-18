@@ -54,12 +54,14 @@
         'opacity: 0;' +
         'pointer-events: none;' +
         'visibility: hidden;' +
+        'z-index: 0;' +
         'transition: opacity 0.2s ease, visibility 0.2s ease;' +
       '}' +
       '#' + CONFIG.formId + ' > [data-step].qf-active {' +
         'opacity: 1;' +
         'pointer-events: auto;' +
         'visibility: visible;' +
+        'z-index: 1;' +
       '}';
     document.head.appendChild(s);
   }
