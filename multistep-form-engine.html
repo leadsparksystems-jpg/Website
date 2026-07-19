@@ -50,11 +50,14 @@
       '#' + id + ' > [data-step] {' +
         'grid-row: 1 / -1;' +
         'grid-column: 1 / -1;' +
-        'visibility: hidden;' +
+        'opacity: 0;' +
+        'transform: translateY(12px);' +
         'pointer-events: none;' +
+        'transition: opacity 0.3s ease, transform 0.3s ease;' +
       '}' +
       '#' + id + ' > [data-step].qf-active {' +
-        'visibility: visible;' +
+        'opacity: 1;' +
+        'transform: translateY(0);' +
         'pointer-events: auto;' +
       '}';
     document.head.appendChild(s);
@@ -101,7 +104,7 @@
     step.classList.add('qf-active');
     currentStep = step;
     step.querySelectorAll('*').forEach(function (el) {
-      if (el.style.opacity !== '' && !el.closest('.w-radio, .w-checkbox, .w-form')) el.style.opacity = '';
+      if (el.style.opacity !== '' && !el.closest('.w-radio, .w-checkbox')) el.style.opacity = '';
     });
     updateShowIf();
   }
