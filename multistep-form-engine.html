@@ -1,3 +1,20 @@
+<style>
+  [data-step] {
+    visibility: hidden;
+    position: absolute;
+    pointer-events: none;
+  }
+  [data-step].qf-active {
+    visibility: visible;
+    position: relative;
+    pointer-events: auto;
+    animation: qf-in 0.3s ease both;
+  }
+  @keyframes qf-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
 <script>
 (function () {
   // ============================================
@@ -38,7 +55,6 @@
   var stepHistory = [];
   var allSteps = [];
 
-
   // --- Step setup ---
 
   function collectSteps() {
@@ -55,13 +71,15 @@
   function setFormHeight() {
     var maxH = 0;
     allSteps.forEach(function (step) {
-      step.classList.add('qf-active');
+      step.style.visibility = 'visible';
+      step.style.position = 'relative';
     });
     allSteps.forEach(function (step) {
-      if (step.offsetHeight > maxH) maxH = step.offsetHeight;
+      if (step.scrollHeight > maxH) maxH = step.scrollHeight;
     });
     allSteps.forEach(function (step) {
-      step.classList.remove('qf-active');
+      step.style.visibility = '';
+      step.style.position = '';
     });
     form.style.minHeight = maxH + 'px';
   }
