@@ -43,24 +43,46 @@
   function injectStyles() {
     var s = document.createElement('style');
     s.textContent =
-      '#' + CONFIG.formId + ' {' +
-        'display: grid !important;' +
-        'grid-template-columns: 1fr;' +
-        'grid-template-rows: 1fr;' +
-      '}' +
       '#' + CONFIG.formId + ' > [data-step] {' +
-        'grid-row: 1;' +
-        'grid-column: 1;' +
-        'visibility: hidden;' +
-        'pointer-events: none;' +
-        'z-index: 0;' +
+        'display: none;' +
       '}' +
       '#' + CONFIG.formId + ' > [data-step].qf-active {' +
-        'visibility: visible;' +
-        'pointer-events: auto;' +
-        'z-index: 1;' +
+        'display: flex;' +
+        'flex-direction: column;' +
       '}';
     document.head.appendChild(s);
+  }
+
+  function setFormHeight() {
+    var maxH = 0;
+    allSteps.forEach(function (step) {
+      step.style.display = 'flex';
+      step.style.flexDirection = 'column';
+    });
+    allSteps.forEach(function (step) {
+      if (step.offsetHeight > maxH) maxH = step.offsetHeight;
+    });
+    allSteps.forEach(function (step) {
+      step.style.display = '';
+      step.style.flexDirection = '';
+    });
+    form.style.minHeight = maxH + 'px';
+    window.addEventListener('resize', function () {
+      allSteps.forEach(function (step) {
+        step.style.display = 'flex';
+        step.style.flexDirection = 'column';
+      });
+      var h = 0;
+      allSteps.forEach(function (step) {
+        if (step.offsetHeight > h) h = step.offsetHeight;
+      });
+      allSteps.forEach(function (step) {
+        step.style.display = '';
+        step.style.flexDirection = '';
+      });
+      form.style.minHeight = h + 'px';
+      if (currentStep) currentStep.classList.add('qf-active');
+    });
   }
 
   // --- Step setup ---
@@ -324,6 +346,7 @@
   function init() {
     injectStyles();
     collectSteps();
+    setFormHeight();
     bindEvents();
     if (allSteps.length) showStep(allSteps[0]);
   }
