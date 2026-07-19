@@ -100,6 +100,9 @@
     allSteps.forEach(function (s) { s.classList.remove('qf-active'); });
     step.classList.add('qf-active');
     currentStep = step;
+    step.querySelectorAll('[data-qf-add-another], [data-qf-next], [data-qf-back], [data-qf-skip]').forEach(function (btn) {
+      btn.style.opacity = '';
+    });
     updateShowIf();
   }
 
