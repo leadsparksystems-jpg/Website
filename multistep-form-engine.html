@@ -53,11 +53,14 @@
     document.head.appendChild(s);
   }
 
-  function setFormHeight() {
+  function measureStepHeights() {
     var maxH = 0;
     allSteps.forEach(function (step) {
       step.style.display = 'flex';
       step.style.flexDirection = 'column';
+      step.style.visibility = 'hidden';
+      step.style.position = 'absolute';
+      step.style.width = '100%';
     });
     allSteps.forEach(function (step) {
       if (step.offsetHeight > maxH) maxH = step.offsetHeight;
@@ -65,22 +68,17 @@
     allSteps.forEach(function (step) {
       step.style.display = '';
       step.style.flexDirection = '';
+      step.style.visibility = '';
+      step.style.position = '';
+      step.style.width = '';
     });
-    form.style.minHeight = maxH + 'px';
+    return maxH;
+  }
+
+  function setFormHeight() {
+    form.style.minHeight = measureStepHeights() + 'px';
     window.addEventListener('resize', function () {
-      allSteps.forEach(function (step) {
-        step.style.display = 'flex';
-        step.style.flexDirection = 'column';
-      });
-      var h = 0;
-      allSteps.forEach(function (step) {
-        if (step.offsetHeight > h) h = step.offsetHeight;
-      });
-      allSteps.forEach(function (step) {
-        step.style.display = '';
-        step.style.flexDirection = '';
-      });
-      form.style.minHeight = h + 'px';
+      form.style.minHeight = measureStepHeights() + 'px';
       if (currentStep) currentStep.classList.add('qf-active');
     });
   }
@@ -255,6 +253,8 @@
           var customInput = wrapper.querySelector('.w-radio-input, .w-checkbox-input');
           if (customInput) customInput.classList.remove('w--redirected-checked');
         }
+      } else if (f.tagName === 'SELECT') {
+        f.selectedIndex = 0;
       } else {
         f.value = '';
       }
@@ -343,11 +343,18 @@
 
   // --- Init ---
 
+  function initDropdowns() {
+    form.querySelectorAll('select').forEach(function (sel) {
+      sel.selectedIndex = 0;
+    });
+  }
+
   function init() {
     injectStyles();
     collectSteps();
     setFormHeight();
     bindEvents();
+    initDropdowns();
     if (allSteps.length) showStep(allSteps[0]);
   }
 
