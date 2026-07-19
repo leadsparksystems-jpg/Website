@@ -50,9 +50,10 @@
       form.appendChild(step);
     });
     form.style.display = 'grid';
+    form.style.gridTemplateRows = '1fr';
+    form.style.gridTemplateColumns = '1fr';
     steps.forEach(function (step) {
-      step.style.gridRow = '1 / -1';
-      step.style.gridColumn = '1 / -1';
+      step.style.gridArea = '1 / 1';
     });
     allSteps = steps;
   }
