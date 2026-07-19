@@ -38,30 +38,6 @@
   var stepHistory = [];
   var allSteps = [];
 
-  // --- Styles ---
-
-  function injectStyles() {
-    var id = CONFIG.formId;
-    var s = document.createElement('style');
-    s.textContent =
-      '#' + id + ' {' +
-        'display: grid;' +
-      '}' +
-      '#' + id + ' > [data-step] {' +
-        'grid-row: 1 / -1;' +
-        'grid-column: 1 / -1;' +
-        'opacity: 0;' +
-        'transform: translateY(12px);' +
-        'pointer-events: none;' +
-        'transition: opacity 0.3s ease, transform 0.3s ease;' +
-      '}' +
-      '#' + id + ' > [data-step].qf-active {' +
-        'opacity: 1;' +
-        'transform: translateY(0);' +
-        'pointer-events: auto;' +
-      '}';
-    document.head.appendChild(s);
-  }
 
   // --- Step setup ---
 
@@ -336,11 +312,9 @@
   }
 
   function init() {
-    injectStyles();
     collectSteps();
     bindEvents();
     initDropdowns();
-    form.offsetHeight;
     if (allSteps.length) showStep(allSteps[0]);
   }
 
