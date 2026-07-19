@@ -1,8 +1,8 @@
 <style>
-  #qf-general {
+  :has(> [data-step]) {
     display: grid !important;
   }
-  #qf-general > [data-step] {
+  [data-step] {
     grid-row: 1 / -1;
     grid-column: 1 / -1;
     opacity: 0;
@@ -10,7 +10,7 @@
     pointer-events: none;
     transition: opacity 0.3s ease, transform 0.3s ease;
   }
-  #qf-general > [data-step].qf-active {
+  [data-step].qf-active {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
