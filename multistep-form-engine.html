@@ -41,46 +41,23 @@
   // --- Styles ---
 
   function injectStyles() {
+    var id = CONFIG.formId;
     var s = document.createElement('style');
     s.textContent =
-      '#' + CONFIG.formId + ' > [data-step] {' +
-        'display: none;' +
+      '#' + id + ' {' +
+        'display: grid;' +
       '}' +
-      '#' + CONFIG.formId + ' > [data-step].qf-active {' +
-        'display: flex;' +
-        'flex-direction: column;' +
+      '#' + id + ' > [data-step] {' +
+        'grid-row: 1 / -1;' +
+        'grid-column: 1 / -1;' +
+        'visibility: hidden;' +
+        'pointer-events: none;' +
+      '}' +
+      '#' + id + ' > [data-step].qf-active {' +
+        'visibility: visible;' +
+        'pointer-events: auto;' +
       '}';
     document.head.appendChild(s);
-  }
-
-  function measureStepHeights() {
-    var maxH = 0;
-    allSteps.forEach(function (step) {
-      step.style.display = 'flex';
-      step.style.flexDirection = 'column';
-      step.style.visibility = 'hidden';
-      step.style.position = 'absolute';
-      step.style.width = '100%';
-    });
-    allSteps.forEach(function (step) {
-      if (step.offsetHeight > maxH) maxH = step.offsetHeight;
-    });
-    allSteps.forEach(function (step) {
-      step.style.display = '';
-      step.style.flexDirection = '';
-      step.style.visibility = '';
-      step.style.position = '';
-      step.style.width = '';
-    });
-    return maxH;
-  }
-
-  function setFormHeight() {
-    form.style.minHeight = measureStepHeights() + 'px';
-    window.addEventListener('resize', function () {
-      form.style.minHeight = measureStepHeights() + 'px';
-      if (currentStep) currentStep.classList.add('qf-active');
-    });
   }
 
   // --- Step setup ---
@@ -352,7 +329,6 @@
   function init() {
     injectStyles();
     collectSteps();
-    setFormHeight();
     bindEvents();
     initDropdowns();
     if (allSteps.length) showStep(allSteps[0]);
