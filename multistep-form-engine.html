@@ -1,18 +1,23 @@
 <style>
-  [data-step] {
-    visibility: hidden;
-    position: absolute;
+  /* Hides steps at any depth on page parse, before JS runs (no flash) */
+  #qf-general [data-step] {
+    opacity: 0;
     pointer-events: none;
   }
-  [data-step].qf-active {
-    visibility: visible;
-    position: relative;
-    pointer-events: auto;
-    animation: qf-in 0.3s ease both;
+  /* Grid stacks all steps in one cell so the wrapper auto-fits the tallest */
+  #qf-general {
+    display: grid;
   }
-  @keyframes qf-in {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
+  #qf-general > [data-step] {
+    grid-row: 1 / -1;
+    grid-column: 1 / -1;
+    transform: translateY(12px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  #qf-general > [data-step].qf-active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
   }
 </style>
 <script>
@@ -66,19 +71,6 @@
       form.appendChild(step);
     });
     allSteps = steps;
-  }
-
-  function setFormHeight() {
-    var maxH = 0;
-    allSteps.forEach(function (step) {
-      step.style.visibility = 'visible';
-      step.style.position = 'relative';
-      var h = step.offsetHeight;
-      if (h > maxH) maxH = h;
-      step.style.visibility = '';
-      step.style.position = '';
-    });
-    form.style.minHeight = maxH + 'px';
   }
 
   // --- Active step sequence ---
@@ -342,8 +334,6 @@
 
   function init() {
     collectSteps();
-    setFormHeight();
-    window.addEventListener('resize', setFormHeight);
     bindEvents();
     initDropdowns();
     if (allSteps.length) showStep(allSteps[0]);
