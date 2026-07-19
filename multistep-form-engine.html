@@ -73,11 +73,8 @@
     allSteps.forEach(function (step) {
       step.style.visibility = 'visible';
       step.style.position = 'relative';
-    });
-    allSteps.forEach(function (step) {
-      if (step.scrollHeight > maxH) maxH = step.scrollHeight;
-    });
-    allSteps.forEach(function (step) {
+      var h = step.offsetHeight;
+      if (h > maxH) maxH = h;
       step.style.visibility = '';
       step.style.position = '';
     });
