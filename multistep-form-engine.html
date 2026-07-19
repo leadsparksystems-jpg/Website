@@ -49,13 +49,21 @@
     steps.forEach(function (step) {
       form.appendChild(step);
     });
-    form.style.display = 'grid';
-    form.style.gridTemplateRows = '1fr';
-    form.style.gridTemplateColumns = '1fr';
-    steps.forEach(function (step) {
-      step.style.gridArea = '1 / 1';
-    });
     allSteps = steps;
+  }
+
+  function setFormHeight() {
+    var maxH = 0;
+    allSteps.forEach(function (step) {
+      step.classList.add('qf-active');
+    });
+    allSteps.forEach(function (step) {
+      if (step.offsetHeight > maxH) maxH = step.offsetHeight;
+    });
+    allSteps.forEach(function (step) {
+      step.classList.remove('qf-active');
+    });
+    form.style.minHeight = maxH + 'px';
   }
 
   // --- Active step sequence ---
@@ -319,6 +327,8 @@
 
   function init() {
     collectSteps();
+    setFormHeight();
+    window.addEventListener('resize', setFormHeight);
     bindEvents();
     initDropdowns();
     if (allSteps.length) showStep(allSteps[0]);
