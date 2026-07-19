@@ -101,7 +101,7 @@
     step.classList.add('qf-active');
     currentStep = step;
     step.querySelectorAll('*').forEach(function (el) {
-      if (el.style.opacity !== '') el.style.opacity = '';
+      if (el.style.opacity !== '' && !el.closest('.w-radio, .w-checkbox, .w-form')) el.style.opacity = '';
     });
     updateShowIf();
   }
