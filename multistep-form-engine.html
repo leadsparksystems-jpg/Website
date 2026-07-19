@@ -147,7 +147,10 @@
     clearStep(leaving);
     clearTriggersOnStep(leaving);
 
-    showStep(stepHistory.pop());
+    var prev = stepHistory.pop();
+    clearStep(prev);
+    clearTriggersOnStep(prev);
+    showStep(prev);
   }
 
   function handleAddAnother() {
