@@ -183,6 +183,77 @@ Use case: "Next" buttons on steps 4/5/6 skip past the remaining custom sauna ste
 
 ---
 
+## How to extend (adding steps / branches)
+
+### Adding a plain step (always shows)
+
+**Webflow only — no code changes:**
+
+1. Add a step div inside `#qf-general` with `data-step="N"` (next number in sequence)
+2. Add buttons: `data-qf-next="true"` to advance, `data-qf-back="true"` to go back
+3. Done — the engine picks it up automatically by `data-step` order
+
+The step number controls **ordering** only. Keep it sequential for sanity.
+
+### Adding a conditional step (shows only for certain answers)
+
+**Webflow:**
+
+1. Add the step div with `data-step="N"` **and** `data-branch="branchname"`
+2. For AND logic, comma-separate: `data-branch="sauna,custom"` (needs BOTH active)
+
+**Code (`CONFIG.branchRules`)** — only if a *new answer* activates it:
+
+```javascript
+branchRules: {
+  'build-type': {        // ← radio's data-branch-trigger (Group Name)
+    'sauna':   ['sauna'],   // ← Choice Value → branch name(s) to activate
+    'icebath': ['icebath'],
+    'both':    ['sauna', 'icebath']
+  }
+}
+```
+
+- **Left key** = the radio's `data-branch-trigger` attribute (its Group Name)
+- **Middle key** = the radio's Choice Value
+- **Right array** = branch name(s) to activate → must match `data-branch` on the step divs
+
+Reusing an existing branch (another `data-branch="sauna"` step)? **No code change** — just the Webflow attribute.
+
+### Adding a whole new branch (new question → new path)
+
+Example: a "Lighting" question that opens lighting steps.
+
+1. **Webflow:** radio group with `data-branch-trigger="lighting-type"`, choice values `led`/`none`, plus `data-qf-next="true"` if it auto-advances
+2. **Webflow:** the new steps get `data-branch="led"`
+3. **Code:** add to `branchRules`:
+
+```javascript
+'lighting-type': {
+  'led':  ['led'],
+  'none': []
+}
+```
+
+### Quick reference — attributes that matter
+
+| Want | Attribute (in Webflow) |
+|------|------------------------|
+| A step | `data-step="N"` on the div |
+| Show step conditionally | `data-branch="x"` (or `"x,y"` for AND) |
+| Radio that opens a branch | `data-branch-trigger="groupname"` |
+| Radio that auto-advances | `data-qf-next="true"` |
+| Next button | `data-qf-next="true"` |
+| Back button | `data-qf-back="true"` |
+| Skip to a specific step | `data-qf-skip="8"` |
+| "Add another" repeatable step | `data-qf-add-another="true"` + `data-add-step` on the step |
+
+### The one rule that trips people up
+
+**Choice Values and branch names must match exactly** — lowercase, no spaces — across three places: the radio's Choice Value in Webflow, the middle key in `branchRules`, and the `data-branch` on the step. One typo and the step silently won't appear.
+
+---
+
 ## Known constraints
 
 - All step divs must be direct children of the wrapper (the engine moves them with `appendChild` on init)
