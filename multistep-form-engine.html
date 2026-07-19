@@ -49,6 +49,11 @@
     steps.forEach(function (step) {
       form.appendChild(step);
     });
+    form.style.display = 'grid';
+    steps.forEach(function (step) {
+      step.style.gridRow = '1 / -1';
+      step.style.gridColumn = '1 / -1';
+    });
     allSteps = steps;
   }
 
