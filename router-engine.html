@@ -1,0 +1,71 @@
+<style>
+  /* Hide panels at any depth on page parse, before JS runs (no flash) */
+  [data-router] [data-router-panel] {
+    opacity: 0;
+    pointer-events: none;
+  }
+  /* Grid stacks all panels in one cell so the wrapper auto-fits the tallest */
+  [data-router] {
+    display: grid;
+  }
+  [data-router] > [data-router-panel] {
+    grid-row: 1 / -1;
+    grid-column: 1 / -1;
+    align-self: center;
+    transform: translateY(12px);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+  [data-router] > [data-router-panel].qf-active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+</style>
+<script>
+  (function () {
+    // ============================================
+    // ROUTER ENGINE — zero config, tag-driven
+    // ============================================
+    //   [data-router]            → wrapper (one per router)
+    //   [data-router-panel="x"]  → a view; first in DOM shows on load
+    //   [data-router-go="x"]     → click target that opens panel "x"
+    //   [data-router-back]       → returns to the first (home) panel
+    // ============================================
+
+    document.querySelectorAll('[data-router]').forEach(function (router) {
+      var panels = Array.from(router.querySelectorAll('[data-router-panel]'));
+      if (!panels.length) return;
+
+      function showPanel(panel) {
+        panels.forEach(function (p) { p.classList.remove('qf-active'); });
+        panel.classList.add('qf-active');
+        // Clear any leftover Webflow IX2 opacity so contents stay visible
+        panel.querySelectorAll('*').forEach(function (el) {
+          if (el.style.opacity !== '' && !el.closest('.w-radio, .w-checkbox')) el.style.opacity = '';
+        });
+      }
+
+      function panelByName(name) {
+        return router.querySelector('[data-router-panel="' + name + '"]');
+      }
+
+      router.addEventListener('click', function (e) {
+        var back = e.target.closest('[data-router-back]');
+        if (back) { e.preventDefault(); showPanel(panels[0]); return; }
+
+        var go = e.target.closest('[data-router-go]');
+        if (go) {
+          e.preventDefault();
+          var target = panelByName(go.getAttribute('data-router-go'));
+          if (target) showPanel(target);
+          return;
+        }
+      });
+
+      // Show the first panel (home / choice screen) on load.
+      showPanel(panels[0]);
+    });
+  })();
+</script>
