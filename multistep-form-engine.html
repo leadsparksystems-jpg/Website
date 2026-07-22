@@ -1,0 +1,410 @@
+<style>
+  /* Hides steps at any depth on page parse, before JS runs (no flash) */
+  [data-multiform] [data-step] {
+    opacity: 0;
+    pointer-events: none;
+  }
+  /* Grid stacks all steps in one cell so the wrapper auto-fits the tallest */
+  [data-multiform] {
+    display: grid;
+  }
+  [data-multiform] > [data-step] {
+    grid-row: 1 / -1;
+    grid-column: 1 / -1;
+    align-self: center;
+    transform: translateY(12px);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+  [data-multiform] > [data-step].qf-active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+</style>
+<script>
+  (function () {
+    // ============================================
+    // CONFIG — Edit this section per form
+    // ============================================
+    var CONFIG = {
+      branchRules: {
+        'build-type': {
+          sauna: ['sauna'],
+          icebath: ['icebath'],
+          both: ['sauna', 'icebath'],
+          commercial: ['commercial'],
+          residential: ['residential'],
+        },
+        'setup-type': { commercial: ['commercial'], residential: ['residential'] },
+
+        'sauna-type': {
+          custom: ['custom'],
+          prebuilt: ['prebuilt'],
+        },
+      },
+
+      autoAdvanceDelay: 300,
+
+      onComplete: function (formData, formEl) {
+        console.log('Form complete:', formData, formEl);
+      },
+    };
+
+    // ============================================
+    // ENGINE — Do not edit below this line
+    // ============================================
+    // Runs one independent instance per [data-multiform] wrapper.
+    // Each instance owns its own state, so multiple forms never collide.
+
+    function initInstance(form) {
+      var activeBranches = new Set();
+      var addAnotherActive = new Set();
+      var currentStep = null;
+      var stepHistory = [];
+      var allSteps = [];
+
+      // --- Step setup ---
+
+      function collectSteps() {
+        var steps = Array.from(form.querySelectorAll('[data-step]'));
+        steps.sort(function (a, b) {
+          return parseInt(a.getAttribute('data-step')) - parseInt(b.getAttribute('data-step'));
+        });
+        steps.forEach(function (step) {
+          form.appendChild(step);
+        });
+        allSteps = steps;
+      }
+
+      // --- Active step sequence ---
+
+      function getActiveSteps() {
+        return allSteps.filter(function (step) {
+          var branch = step.getAttribute('data-branch');
+          var isAddStep = step.hasAttribute('data-add-step');
+          var stepNum = step.getAttribute('data-step');
+
+          if (!branch) {
+            return !isAddStep || addAnotherActive.has(stepNum);
+          }
+
+          var required = branch.split(',').map(function (b) {
+            return b.trim();
+          });
+          var branchActive = required.every(function (b) {
+            return activeBranches.has(b);
+          });
+
+          if (!branchActive) return false;
+          if (isAddStep) return addAnotherActive.has(stepNum);
+          return true;
+        });
+      }
+
+      // --- Navigation ---
+
+      function showStep(step) {
+        allSteps.forEach(function (s) {
+          s.classList.remove('qf-active');
+        });
+        step.classList.add('qf-active');
+        currentStep = step;
+        step.querySelectorAll('*').forEach(function (el) {
+          if (el.style.opacity !== '' && !el.closest('.w-radio, .w-checkbox')) el.style.opacity = '';
+        });
+        updateShowIf();
+      }
+
+      function goNext() {
+        var active = getActiveSteps();
+        var idx = active.indexOf(currentStep);
+        if (idx < active.length - 1) {
+          stepHistory.push(currentStep);
+          showStep(active[idx + 1]);
+        } else if (CONFIG.onComplete) {
+          CONFIG.onComplete(collectData(), form);
+        }
+      }
+
+      function goNextSkipGroup() {
+        var currentBranch = currentStep.getAttribute('data-branch');
+        var active = getActiveSteps();
+        var pastCurrent = false;
+
+        for (var i = 0; i < active.length; i++) {
+          if (active[i] === currentStep) {
+            pastCurrent = true;
+            continue;
+          }
+          if (pastCurrent && active[i].getAttribute('data-branch') !== currentBranch) {
+            stepHistory.push(currentStep);
+            showStep(active[i]);
+            return;
+          }
+        }
+
+        if (CONFIG.onComplete) CONFIG.onComplete(collectData(), form);
+      }
+
+      function goBack() {
+        if (!stepHistory.length) return;
+
+        var leaving = currentStep;
+        var leavingStepNum = leaving.getAttribute('data-step');
+
+        if (leaving.hasAttribute('data-add-step')) {
+          addAnotherActive.delete(leavingStepNum);
+        }
+
+        clearStep(leaving);
+        clearTriggersOnStep(leaving);
+
+        var prev = stepHistory.pop();
+        clearStep(prev);
+        clearTriggersOnStep(prev);
+        showStep(prev);
+      }
+
+      function handleAddAnother() {
+        goNext();
+      }
+
+      // --- Branch management ---
+
+      function handleTrigger(name, value) {
+        var rules = CONFIG.branchRules[name];
+        if (!rules) return;
+
+        clearBranch(name);
+
+        if (rules[value]) {
+          rules[value].forEach(function (b) {
+            activeBranches.add(b);
+          });
+        }
+      }
+
+      function clearBranch(name) {
+        var rules = CONFIG.branchRules[name];
+        if (!rules) return;
+
+        Object.values(rules).forEach(function (branches) {
+          branches.forEach(function (b) {
+            activeBranches.delete(b);
+
+            allSteps.forEach(function (step) {
+              var stepBranch = step.getAttribute('data-branch');
+              if (stepBranch) {
+                var parts = stepBranch.split(',').map(function (s) {
+                  return s.trim();
+                });
+                if (parts.indexOf(b) !== -1) {
+                  addAnotherActive.delete(step.getAttribute('data-step'));
+                  clearStep(step);
+                }
+              }
+            });
+          });
+        });
+
+        cascadeClear(name);
+      }
+
+      function cascadeClear(triggerName) {
+        allSteps.forEach(function (step) {
+          var branch = step.getAttribute('data-branch');
+          if (!branch) return;
+
+          var required = branch.split(',').map(function (b) {
+            return b.trim();
+          });
+          var allActive = required.every(function (b) {
+            return activeBranches.has(b);
+          });
+
+          if (!allActive) {
+            step.querySelectorAll('[data-branch-trigger]').forEach(function (el) {
+              var childTrigger = getTriggerName(el);
+              if (childTrigger && childTrigger !== triggerName) {
+                clearBranch(childTrigger);
+              }
+            });
+          }
+        });
+      }
+
+      function clearTriggersOnStep(step) {
+        step.querySelectorAll('[data-branch-trigger]').forEach(function (el) {
+          var name = getTriggerName(el);
+          if (name) clearBranch(name);
+        });
+      }
+
+      // --- Field utilities ---
+
+      function getTriggerName(el) {
+        return el.getAttribute('data-branch-trigger') || (el.closest('[data-branch-trigger]') && el.closest('[data-branch-trigger]').getAttribute('data-branch-trigger'));
+      }
+
+      function clearStep(step) {
+        step.querySelectorAll('input, select, textarea').forEach(function (f) {
+          if (f.type === 'radio' || f.type === 'checkbox') {
+            f.checked = false;
+            var wrapper = f.closest('.w-radio, .w-checkbox');
+            if (wrapper) {
+              var customInput = wrapper.querySelector('.w-radio-input, .w-checkbox-input');
+              if (customInput) customInput.classList.remove('w--redirected-checked');
+            }
+          } else if (f.tagName === 'SELECT') {
+            f.selectedIndex = 0;
+          } else {
+            f.value = '';
+          }
+        });
+      }
+
+      function updateShowIf() {
+        form.querySelectorAll('[data-show-if]').forEach(function (el) {
+          var parts = el.getAttribute('data-show-if').split(':');
+          var fieldName = parts[0];
+          var allowed = parts[1].split(',').map(function (v) {
+            return v.trim();
+          });
+
+          var checked = form.querySelector('[name="' + fieldName + '"]:checked');
+          var select = form.querySelector('select[name="' + fieldName + '"]');
+          var val = checked ? checked.value : select ? select.value : '';
+
+          el.style.display = allowed.indexOf(val) !== -1 ? '' : 'none';
+        });
+      }
+
+      function collectData() {
+        var data = {};
+        form.querySelectorAll('input, select, textarea').forEach(function (f) {
+          if (!f.name) return;
+          if (f.type === 'radio') {
+            if (f.checked) data[f.name] = f.value;
+          } else if (f.type === 'checkbox') {
+            if (f.checked) {
+              if (!data[f.name]) data[f.name] = [];
+              data[f.name].push(f.value);
+            }
+          } else if (f.value) {
+            data[f.name] = f.value;
+          }
+        });
+        return data;
+      }
+
+      // --- Events ---
+
+      function bindEvents() {
+        form.addEventListener('change', function (e) {
+          var input = e.target;
+
+          var triggerName = getTriggerName(input);
+          if (triggerName) handleTrigger(triggerName, input.value);
+
+          updateShowIf();
+
+          var hasAutoAdvance = input.hasAttribute('data-qf-next') || input.closest('[data-qf-next]') !== null;
+
+          if (input.type === 'radio' && hasAutoAdvance) {
+            setTimeout(goNext, CONFIG.autoAdvanceDelay);
+          }
+        });
+
+        form.addEventListener('click', function (e) {
+          var back = e.target.closest('[data-qf-back]');
+          if (back) {
+            e.preventDefault();
+            goBack();
+            return;
+          }
+
+          var skip = e.target.closest('[data-qf-skip]');
+          if (skip) {
+            e.preventDefault();
+            // skip jumps to the step whose data-skip-target matches
+            var targetLabel = skip.getAttribute('data-qf-skip');
+            var targetStep = form.querySelector('[data-skip-target="' + targetLabel + '"]');
+            if (targetStep) {
+              stepHistory.push(currentStep);
+              showStep(targetStep);
+            }
+            return;
+          }
+
+          var add = e.target.closest('[data-qf-add-another]');
+          if (add) {
+            e.preventDefault();
+            goNext();
+            return;
+          }
+
+          var next = e.target.closest('[data-qf-next]');
+          if (!next) return;
+          if (next.matches('input')) return;
+          if (next.closest('label.w-radio, .w-radio')) return;
+
+          e.preventDefault();
+          goNext();
+        });
+      }
+
+      // --- Init this instance ---
+
+      function initDropdowns() {
+        form.querySelectorAll('select').forEach(function (sel) {
+          sel.selectedIndex = 0;
+        });
+      }
+
+      collectSteps();
+      bindEvents();
+      initDropdowns();
+      if (allSteps.length) showStep(allSteps[0]);
+    }
+
+    // ============================================
+    // Gate Next buttons until required fields on the active step are filled
+    // (document-wide, so it covers every form on the page)
+    // ============================================
+
+    function gateButtons() {
+      document.querySelectorAll('[data-multiform] [data-step].qf-active').forEach(function (step) {
+        var ok = Array.from(step.querySelectorAll('[required]')).every(function (el) {
+          if (el.type === 'radio') return (el.form || step).querySelector('[name="' + el.name + '"]:checked');
+          if (el.type === 'checkbox') return el.checked;
+          return el.value.trim() !== '';
+        });
+        step.querySelectorAll('[data-qf-next], [data-qf-add-another], [data-qf-skip]').forEach(function (btn) {
+          if (btn.matches('input') || btn.closest('.w-radio')) return;
+          btn.style.opacity = ok ? '' : '0.5';
+          btn.style.pointerEvents = ok ? '' : 'none';
+        });
+      });
+    }
+
+    // ============================================
+    // Boot every [data-multiform] wrapper on the page
+    // ============================================
+
+    function boot() {
+      document.querySelectorAll('[data-multiform]').forEach(initInstance);
+      document.addEventListener('input', gateButtons);
+      document.addEventListener('change', gateButtons);
+      new MutationObserver(gateButtons).observe(document.body, { subtree: true, attributes: true, attributeFilter: ['class'] });
+      gateButtons();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot);
+    } else {
+      boot();
+    }
+  })();
+</script>
